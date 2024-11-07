@@ -19,23 +19,23 @@ LinearRegression from Scikit-Learn
 The important parts of the exploratory data analysis are listed in the following.
 
 ## Categorical Features
-![Categorical Features](https://github.com/moscmh/medicalcost/blob/main/plot/categorical.png?raw=true)
+![Categorical Features](https://github.com/moscmh/portfolio/blob/main/Linear_Regression/Medical_Cost_Prediction/plot/categorical.png?raw=true)
 * `Sex` and `residential region` were found to have no significant relationship with `medical cost`.
 * `Whether a smoker` showed a significant difference in medical cost between smokers and non-smokers.
 
 ## Numeric Features
-![Numeric Features](https://github.com/moscmh/medicalcost/blob/main/plot/numeric.png?raw=true)
+![Numeric Features](https://github.com/moscmh/portfolio/blob/main/Linear_Regression/Medical_Cost_Prediction/plot/numeric.png?raw=true)
 * Three scatterplots were shown to examine the relationships of `Age` and `BMI` with `medical cost`.
 * `BMI` did not show a linear relationship with `medical cost`.
 * There were three trendlines in the scatterplot for `medical cost` vs `age`. Clustering was conducted next to efficiently label the three different groups.
 
 ## Feature Engineering
-![Feature engineering](https://github.com/moscmh/medicalcost/blob/main/plot/feature_engineering.png?raw=true)
+![Feature engineering](https://github.com/moscmh/portfolio/blob/main/Linear_Regression/Medical_Cost_Prediction/plot/feature_engineering.png?raw=true)
 * **Guassian Mixture Model** was used to efficiently cluster the individuals from the three trendlines respectively.
 * The trendlines could be explained by the choice of hospitals.
 
 # Model Training and Result
-![Metrics](https://github.com/moscmh/medicalcost/blob/main/plot/metrics.png?raw=true)
+![Metrics](https://github.com/moscmh/portfolio/blob/main/Linear_Regression/Medical_Cost_Prediction/plot/metrics.png?raw=true)
 * Eventually, `age`, `BMI`, and the `newly created feature` were used to train a linear regression model.
 * The accuracy of the model on training and testing data are `96.7%` and `96.6%` respectively.
 * The model can be expressed by the following equation. `Label_1` and `Label_2` are binary values that belong to the categorical `newly created feature`. The sum of the binary values for this 2 labels does not exceed 1. If both are `0`, the individual has `Label_3` as the value of the `newly created feature`.
