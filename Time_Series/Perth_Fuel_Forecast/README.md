@@ -30,3 +30,5 @@ Adfuller, ARIMA, SARIMAX
 * Nevertheless, the Prob(Q) and Prob(JB) are both non-significant. They contradicts the plots.
 ![ARIMA One-Step Ahead In-Sample Prediction](https://github.com/moscmh/portfolio/blob/main/Time_Series/Perth_Fuel_Forecast/plot/arima_1_insample.png?raw=true)
 * For `One-Step Ahead In-Sample Prediction`, the model is able to capture the movement but the values are much closer to the average.
+![ARIMA Model Validation](https://github.com/moscmh/portfolio/blob/main/Time_Series/Perth_Fuel_Forecast/plot/ARIMA_valid.png?raw=true)
+* However, the model does not have enough evidence to make accurate prediction.
