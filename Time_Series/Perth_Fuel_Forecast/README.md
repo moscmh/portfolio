@@ -32,3 +32,7 @@ Adfuller, ARIMA, SARIMAX
 * For `One-Step Ahead In-Sample Prediction`, the model is able to capture the movement but the values are much closer to the average.
 ![ARIMA Model Validation](https://github.com/moscmh/portfolio/blob/main/Time_Series/Perth_Fuel_Forecast/plot/ARIMA_valid.png?raw=true)
 * However, the model does not have enough evidence to make accurate prediction.
+
+## Seasonal Pattern
+* Period of 3 is used for modelling with seasonal pattern.
+* `pmdarima` 
