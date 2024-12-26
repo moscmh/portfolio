@@ -14,4 +14,4 @@ matplotlib, seaborn
 Adfuller, ARIMA, SARIMAX
 
 ## Stationarity
-![Original Fuel Price](/plot/original_price.png)
+![Original Fuel Price](https://github.com/moscmh/portfolio/blob/main/Time_Series/Perth_Fuel_Forecast/plot/original_price.png?raw=true)
