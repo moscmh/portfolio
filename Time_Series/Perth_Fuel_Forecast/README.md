@@ -24,3 +24,7 @@ Adfuller, ARIMA, SARIMAX
 * By searching through different combinations of the p and q values, the model with (0,d,2) yields the best AIC value.
 
 ## Model Validation
+![ARIMA model diagnostics](https://github.com/moscmh/portfolio/blob/main/Time_Series/Perth_Fuel_Forecast/plot/ARIMA_diagnostics.png?raw=true)
+* The mean absolute error is 7.145.
+* The diagnostics, however, indicate that the model has much room to improve. There is a pattern shown in the `Normal Q-Q` plot and the distribution of the residuals does not resemble closely a normal distribution.
+* Nevertheless, the Prob(Q) and Prob(JB) are both non-significant. They contradicts the plots.
