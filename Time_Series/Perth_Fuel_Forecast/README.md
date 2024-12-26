@@ -15,3 +15,7 @@ Adfuller, ARIMA, SARIMAX
 
 ## Stationarity
 ![Original Fuel Price](https://github.com/moscmh/portfolio/blob/main/Time_Series/Perth_Fuel_Forecast/plot/original_price.png?raw=true)
+* Original fuel price is stationary as shown in the plot as well as Adfuller's test where `p` value is `.0006`.
+* Differencing and log-return of fuel price are therefore unnecessary.
+
+## Orders of ARIMA
