@@ -35,4 +35,9 @@ Adfuller, ARIMA, SARIMAX
 
 ## Seasonal Pattern
 * Period of 3 is used for modelling with seasonal pattern.
-* `pmdarima` 
+![SARIMA Diagnostics](https://github.com/moscmh/portfolio/blob/main/Time_Series/Perth_Fuel_Forecast/plot/SARIMA_diagnostics.png?raw=true)
+* `pmdarima` searches and finds the best model with (2,0,0)(0,1,0)[3] as both the non-seasonal and seasonal orders.
+* The data points on `Normal Q-Q` lies closer to the centre line and the residuals distribution is more closer to the normal distribution.
+* With only the given seasonal factor, the model is unable to capture the trend of the fuel price.
+
+## Exogenous Feature
