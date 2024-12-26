@@ -19,3 +19,8 @@ Adfuller, ARIMA, SARIMAX
 * Differencing and log-return of fuel price are therefore unnecessary.
 
 ## Orders of ARIMA
+![ACF and PACF for ARIMA](https://github.com/moscmh/portfolio/blob/main/Time_Series/Perth_Fuel_Forecast/plot/ARIMA_ACF_PACF.png?raw=true)
+* Both ACF and PACF plots also show inconclusive orders for ARIMA model as there is no sign of tailing off.
+* By searching through different combinations of the p and q values, the model with (0,d,2) yields the best AIC value.
+
+## Model Validation
