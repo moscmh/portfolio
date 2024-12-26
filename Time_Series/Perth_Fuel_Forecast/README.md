@@ -28,3 +28,5 @@ Adfuller, ARIMA, SARIMAX
 * The mean absolute error is 7.145.
 * The diagnostics, however, indicate that the model has much room to improve. There is a pattern shown in the `Normal Q-Q` plot and the distribution of the residuals does not resemble closely a normal distribution.
 * Nevertheless, the Prob(Q) and Prob(JB) are both non-significant. They contradicts the plots.
+![ARIMA One-Step Ahead In-Sample Prediction](https://github.com/moscmh/portfolio/blob/main/Time_Series/Perth_Fuel_Forecast/plot/arima_1_insample.png?raw=true)
+* For `One-Step Ahead In-Sample Prediction`, the model is able to capture the movement but the values are much closer to the average.
