@@ -42,3 +42,5 @@ Adfuller, ARIMA, SARIMAX
 
 ## Exogenous Feature
 &emsp;An additional feature which is maximum temperature is used to try to improve the performance of the model. The data was collected from [Bureau of Meterology](http://www.bom.gov.au/?ref=logo).
+![SARIMAX Diagnostics](https://github.com/moscmh/portfolio/blob/main/Time_Series/Perth_Fuel_Forecast/plot/SARIMAX_diag.png?raw=true)
+* The diagnostics show that the residuals distribution moderately resembles the normal distribution. There is still a pattern among the data points in the Normal Q-Q plot.
