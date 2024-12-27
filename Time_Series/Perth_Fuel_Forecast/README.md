@@ -46,3 +46,5 @@ Adfuller, ARIMA, SARIMAX
 * The diagnostics show that the residuals distribution moderately resembles the normal distribution. There is still a pattern among the data points in the Normal Q-Q plot.
 ![SARIMAX Model Validation](https://github.com/moscmh/portfolio/blob/main/Time_Series/Perth_Fuel_Forecast/plot/SARIMAX_valid.png?raw=true)
 * In the validation, the model cannot follow closely the local downward trend.
+![SARIMAX Forecast](https://github.com/moscmh/portfolio/blob/main/Time_Series/Perth_Fuel_Forecast/plot/SARIMAX_forecast.png?raw=true)
+* The future fuel price forecasted by the SARIMAX model fluctuates around AUD$177/100L in the coming two years.
