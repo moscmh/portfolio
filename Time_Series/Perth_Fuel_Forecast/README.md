@@ -1,5 +1,5 @@
 # Perth Fuel Price Forecast
-&emsp;The project follows `Box-Jenkins`'s modelling framework that consists of `identification`, `estimation`, `model diagnostic`, and `production` to practise analysing and making forecast of a time series dataset, Perth's fuel prices. Note that the fuel price is expressed as cents per litre (AUD/100L).  
+&emsp;The project follows `Box-Jenkins`'s modelling framework that consists of `identification`, `estimation`, `model diagnostic`, and `production` to practise analysing and making forecast of a time series dataset, Perth's fuel prices. Note that the fuel price is expressed as cents per litre (AUD/100L) Data was collected from [Fuel Watch](https://www.fuelwatch.wa.gov.au).  
 
 &emsp;According to the forecast, the average fuel price in Perth metro area will fluctuate around `AUD$177/100L` in the coming two years. The forecast does not reproduce the spikes as happened in the past. To improve, more data from the past is recommended to determine if there is a pattern and/or a trend in the time series.
 
@@ -41,3 +41,4 @@ Adfuller, ARIMA, SARIMAX
 * With only the given seasonal factor, the model is unable to capture the trend of the fuel price.
 
 ## Exogenous Feature
+&emsp;An additional feature which is maximum temperature is used to try to improve the performance of the model. The data was collected from [Bureau of Meterology](http://www.bom.gov.au/?ref=logo).
