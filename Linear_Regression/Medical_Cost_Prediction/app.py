@@ -19,7 +19,7 @@ buttons = [button_intro, button_eda, button_model]
 # Default Page
 if True not in buttons:
     st.header("Introduction")
-    st.image("header.jpg", caption="photo from SBS News")
+    st.image("https://github.com/moscmh/portfolio/blob/main/Linear_Regression/Medical_Cost_Prediction/header.jpeg?raw=true", caption="photo from SBS News")
     st.markdown("&emsp;The [dataset](https://github.com/stedy/Machine-Learning-with-R-datasets/blob/master/insurance.csv) contains `1338` individuals' information with `6` attributes. They are `age`, `sex`, `BMI`, `number of children`, `whether is a smoker`, `residential region`. The outcome variable is the medical cost. This project showed a promising predictive **linear regression** model for estimating medical cost. It can be useful for insurance companies and government to determine policy cost and to allocate resources respectively.") 
     st.markdown("&emsp;Eventually, after conducting **exploratory data analysis** and **feature engineering**, a new feature was created that may be related to `hospital choice`. Together with `age` and `whether is a smoker`, a regression model with approximately 96.6% accuracy was built.")
     st.markdown("&emsp;Future work requires researching about the exact feature that was created. ")
@@ -37,7 +37,7 @@ if True not in buttons:
 # Introduction
 if button_intro:
     st.header("Introduction")
-    st.image("header.jpg", caption="photo from SBS News")
+    st.image("https://github.com/moscmh/portfolio/blob/main/Linear_Regression/Medical_Cost_Prediction/header.jpeg?raw=true", caption="photo from SBS News")
     st.markdown("&emsp;The [dataset](https://github.com/stedy/Machine-Learning-with-R-datasets/blob/master/insurance.csv) contains `1338` individuals' information with `6` attributes. They are `age`, `sex`, `BMI`, `number of children`, `whether is a smoker`, `residential region`. The outcome variable is the medical cost. This project showed a promising predictive **linear regression** model for estimating medical cost. It can be useful for insurance companies and government to determine policy cost and to allocate resources respectively.") 
     st.markdown("&emsp;Eventually, after conducting **exploratory data analysis** and **feature engineering**, a new feature was created that may be related to `hospital choice`. Together with `age` and `whether is a smoker`, a regression model with approximately 96.6% accuracy was built.")
     st.markdown("&emsp;Future work requires researching about the exact feature that was created. ")
