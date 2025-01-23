@@ -8,7 +8,7 @@
 * Exploratory Data Analysis
 * Feature engineering
 * Linear Regression
-## Perth Fuel Forecast
+## [Perth Fuel Forecast](https://moscmh-portfolio-time-seriesperth-fuel-forecastapp-0rwtuw.streamlit.app)
 &emsp;The project follows `Box-Jenkins`'s modelling framework that consists of `identification`, `estimation`, `model diagnostic`, and `production` to practise analysing and making forecast of a time series dataset, Perth's fuel prices. Note that the fuel price is expressed as cents per litre (AUD/100L). Data was collected from [Fuel Watch](https://www.fuelwatch.wa.gov.au).  
 * MySQL Database Management
 * Data visualisation
