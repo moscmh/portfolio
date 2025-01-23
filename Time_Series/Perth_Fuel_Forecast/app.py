@@ -21,7 +21,7 @@ buttons = [button_intro, button_eda, button_ARIMA, button_SARIMA, button_SARIMAX
 # Default Page
 if True not in buttons:
     st.header("Introduction")
-    st.image("header.jpg", caption="photo from The West Australian")
+    st.image("https://github.com/moscmh/portfolio/blob/main/Time_Series/Perth_Fuel_Forecast/header.jpg?raw=true", caption="photo from The West Australian")
     st.markdown("&emsp;The project follows `Box-Jenkins`'s modelling framework that consists of `identification`, `estimation`, `model diagnostic`, and `production` to practise analysing and making forecast of a time series dataset, Perth's fuel prices. Note that the fuel price is expressed as cents per litre (AUD/100L). Data was collected from [Fuel Watch](https://www.fuelwatch.wa.gov.au).") 
     st.markdown("&emsp;According to the forecast, the average fuel price in Perth metro area will fluctuate around `AUD$177/100L` in the coming two years. The forecast does not reproduce the spikes as happened in the past. To improve, more data from the past is recommended to determine if there is a pattern and/or a trend in the time series.")
 
@@ -38,7 +38,7 @@ if True not in buttons:
 # Introduction
 if button_intro:
     st.header("Introduction")
-    st.image("header.jpg", caption="photo from The West Australian")
+    st.image("https://github.com/moscmh/portfolio/blob/main/Time_Series/Perth_Fuel_Forecast/header.jpg?raw=true", caption="photo from The West Australian")
     st.markdown("&emsp;The project follows `Box-Jenkins`'s modelling framework that consists of `identification`, `estimation`, `model diagnostic`, and `production` to practise analysing and making forecast of a time series dataset, Perth's fuel prices. Note that the fuel price is expressed as cents per litre (AUD/100L). Data was collected from [Fuel Watch](https://www.fuelwatch.wa.gov.au).") 
     st.markdown("&emsp;According to the forecast, the average fuel price in Perth metro area will fluctuate around `AUD$177/100L` in the coming two years. The forecast does not reproduce the spikes as happened in the past. To improve, more data from the past is recommended to determine if there is a pattern and/or a trend in the time series.")
 
