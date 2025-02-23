@@ -19,7 +19,7 @@ buttons = [button_intro, button_eda, button_model]
 # Default Page
 if True not in buttons:
     st.header("Introduction")
-    st.image("https://github.com/moscmh/portfolio/blob/main/Deep_Learning/Pneumonia/header.jpeg?raw=true", caption="photo from Medscape")
+    st.image("https://github.com/moscmh/portfolio/blob/main/Deep_Learning/Pneumonia/plot/header.jpg?raw=true", caption="photo from Medscape")
     st.markdown("&emsp;This project builds deep learning models that detects pneumonia using X-ray images.") 
     st.markdown("&emsp;Two `CNN` models and a `Transfer Learning` model were built preliminarily. The simplest `CNN` model outperformed the `ResNet101V2` pre-trained model. The accuracies on `test set` were around `85%` and `67%` respectively.")
     st.markdown("&emsp;Further tuning and regularisation techniques need to be considered in order to improve the models. A model with `99%` accuracy is expected because pneumonia is a serious medical condition with a `concerning mortality rate`.")
@@ -35,7 +35,7 @@ if True not in buttons:
 # Introduction
 if button_intro:
     st.header("Introduction")
-    st.image("https://github.com/moscmh/portfolio/blob/main/Deep_Learning/Pneumonia/header.jpeg?raw=true", caption="photo from Medscape")
+    st.image("https://github.com/moscmh/portfolio/blob/main/Deep_Learning/Pneumonia/plot/header.jpg?raw=true", caption="photo from Medscape")
     st.markdown("&emsp;This project builds deep learning models that detects pneumonia using X-ray images.") 
     st.markdown("&emsp;Two `CNN` models and a `Transfer Learning` model were built preliminarily. The simplest `CNN` model outperformed the `ResNet101V2` pre-trained model. The accuracies on `test set` were around `85%` and `67%` respectively.")
     st.markdown("&emsp;Further tuning and regularisation techniques need to be considered in order to improve the models. A model with `99%` accuracy is expected because pneumonia is a serious medical condition with a `concerning mortality rate`.")
