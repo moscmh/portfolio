@@ -8,6 +8,7 @@
 * Exploratory Data Analysis
 * Feature engineering
 * Linear Regression
+
 ## [Perth Fuel Forecast](https://moscmh-portfolio-time-seriesperth-fuel-forecastapp-0rwtuw.streamlit.app)
 &emsp;The project follows `Box-Jenkins`'s modelling framework that consists of `identification`, `estimation`, `model diagnostic`, and `production` to practise analysing and making forecast of a time series dataset, Perth's fuel prices. Note that the fuel price is expressed as cents per litre (AUD/100L). Data was collected from [Fuel Watch](https://www.fuelwatch.wa.gov.au).  
 * MySQL Database Management
@@ -15,3 +16,13 @@
 * Stationarity Test
 * Non-seasonal and seasonal orders search
 * Time series `ARIMA` and `SARIMAX` modelling and forecast
+
+## [Pneumonia Detection Model](https://moscmh-portfolio-deep-learningpneumoniaapp-n1ooah.streamlit.app/)
+&emsp;Two `CNN` models and a `Transfer Learning` model were built preliminarily. The simplest `CNN` model outperformed the `ResNet101V2` pre-trained model. The accuracies on `test set` were around `85%` and `67%` respectively.
+
+&emsp;Further tuning and regularisation techniques need to be considered in order to improve the models. A model with `99%` accuracy is expected because pneumonia is a serious medical condition with a `concerning mortality rate`.
+* Deep Neural Network
+* Convolutional Neural Network
+* Weight Initialisation
+* Regularisation
+* Transfer Learning Model
