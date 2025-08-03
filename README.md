@@ -32,4 +32,8 @@
 
 &emsp;The binary classes, complete or incomplete booking, are significantly imbalanced. To address this, downsampling on the majority class was applied before exploratory data analysis and preprocessing.
 
-&emsp;A gradient boosting classifier was trained and optimsed using Optuna, achieving accuracy, recall, and F1 scores of around 65%. Future work may include data collection of the minority class, a new feature that records the month of the flight, and a focus on route preferences.
+&emsp;A gradient boosting classifier was trained and optimised using Optuna, achieving accuracy, recall, and F1 scores of around 65%. Future work may include data collection of the minority class, a new feature that records the month of the flight, and a focus on route preferences.
+* Data preprocesing
+* Model optimisation using Optuna
+* Model evaluation through various metrics
+* Visualisation for sharing insights
