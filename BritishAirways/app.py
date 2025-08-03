@@ -56,7 +56,7 @@ if button_model:
     st.header("Model Training and Result")
     st.markdown("![Confusion Matrix](https://github.com/moscmh/portfolio/blob/main/BritishAirways/plot/cm.png?raw=true)")
     st.markdown("* The model was optimsed using Optuna and all accuracy, recall, and F1 score are about 65%.")
-    st.markdown("* The downsampled dataset enhanced the overall performance on both classes. Without downsampling, the model would easily score >80% accuracy, which simply predicts most of the instances as the majority class: incomplete booking.")
+    st.markdown("* The downsampled dataset enhanced the overall performance on both classes. Without downsampling, the model would easily score >80% accuracy, which simply predicts most of the instances as the majority class: incomplete booking. It would have no capability in identifying instances with minority class.")
     st.markdown("![Feature Importance](https://github.com/moscmh/portfolio/blob/main/BritishAirways/plot/features.png?raw=true)")
     st.markdown("* The most important features are `purchase lead`, `length of stay`, `flight duration`, etc.")
     st.markdown("* Marketing may pay attention to how to increase the chance of booking completion for larger `purchase lead` and `length of stay`.")
