@@ -27,5 +27,9 @@
 * Regularisation
 * Transfer Learning Model
 
-## [British Airways Booking Prediction]()
-&emps;
+## [British Airways Booking Prediction](https://f76qt5appkw3iuykenv9rsg.streamlit.app/)
+&emps;The goal of this project is to build a predictive model that can estimate the likelihood of a customer booking a flight with British Airways. The available dataset contains 13 features, including number of passengers, sales channel, trip type, etc.
+
+&emsp;The binary classes, complete or incomplete booking, are significantly imbalanced. To address this, downsampling on the majority class was applied before exploratory data analysis and preprocessing.
+
+&emsp;A gradient boosting classifier was trained and optimsed using Optuna, achieving accuracy, recall, and F1 scores of around 65%. Future work may include data collection of the minority class, a new feature that records the month of the flight, and a focus on route preferences.
