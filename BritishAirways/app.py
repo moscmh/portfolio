@@ -18,7 +18,7 @@ buttons = [button_intro, button_model]
 # Default Page
 if True not in buttons:
     st.header("Introduction")
-    st.image("https://www.google.com/imgres?q=british%20airways&imgurl=https%3A%2F%2Fupload.wikimedia.org%2Fwikipedia%2Fsco%2Fthumb%2F4%2F42%2FBritish_Airways_Logo.svg%2F1200px-British_Airways_Logo.svg.png&imgrefurl=https%3A%2F%2Fsco.wikipedia.org%2Fwiki%2FFile%3ABritish_Airways_Logo.svg&docid=9f8_A-xCbWNK3M&tbnid=TnjOZTQ9KY2crM&vet=12ahUKEwiBs5Smg--OAxX5rlYBHaknI6sQM3oECCIQAA..i&w=1200&h=188&hcb=2&ved=2ahUKEwiBs5Smg--OAxX5rlYBHaknI6sQM3oECCIQAA", caption="photo from Wikipedia")
+    st.image("https://banner2.cleanpng.com/20181113/iai/kisspng-british-airways-logo-oneworld-united-kingdom-qanta-wrl-ll-qts-1713923070015.webp", caption="photo from Wikipedia")
     st.markdown("&emsp;The goal of this project is to build a predictive model that can estimate the likelihood of a customer booking a flight with British Airways. The available dataset contains 13 features, including `number of passengers`, `sales channel`, `trip type`, etc.") 
     st.markdown("&emsp;The binary classes, complete or incomplete booking, are significantly imbalanced. To address this, downsampling on the majority class was applied before exploratory data analysis and preprocessing.")
     st.markdown("&emsp;A gradient boosting classifier was trained and optimsed using Optuna, achieving accuracy, recall, and F1 scores of around 65%. Future work may include data collection of the minority class, a new feature that records the month of the flight, and a focus on route preferences.")
