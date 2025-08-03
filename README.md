@@ -28,7 +28,7 @@
 * Transfer Learning Model
 
 ## [British Airways Booking Prediction](https://f76qt5appkw3iuykenv9rsg.streamlit.app/)
-&emps;The goal of this project is to build a predictive model that can estimate the likelihood of a customer booking a flight with British Airways. The available dataset contains 13 features, including number of passengers, sales channel, trip type, etc.
+&emsp;The goal of this project is to build a predictive model that can estimate the likelihood of a customer booking a flight with British Airways. The available dataset contains 13 features, including number of passengers, sales channel, trip type, etc.
 
 &emsp;The binary classes, complete or incomplete booking, are significantly imbalanced. To address this, downsampling on the majority class was applied before exploratory data analysis and preprocessing.
 
