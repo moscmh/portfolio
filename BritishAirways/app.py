@@ -18,7 +18,7 @@ buttons = [button_intro, button_model]
 # Default Page
 if True not in buttons:
     st.header("Introduction")
-    st.image("https://banner2.cleanpng.com/20181113/iai/kisspng-british-airways-logo-oneworld-united-kingdom-qanta-wrl-ll-qts-1713923070015.webp", caption="photo from Wikipedia")
+    st.image("https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/British_Airways_A350-1000_%28G-XWBD%29_%40_LHR%2C_Jan_2020.jpg/2560px-British_Airways_A350-1000_%28G-XWBD%29_%40_LHR%2C_Jan_2020.jpg", caption="photo from Wikipedia")
     st.markdown("&emsp;The goal of this project is to build a predictive model that can estimate the likelihood of a customer booking a flight with British Airways. The available dataset contains 13 features, including `number of passengers`, `sales channel`, `trip type`, etc.") 
     st.markdown("&emsp;The binary classes, complete or incomplete booking, are significantly imbalanced. To address this, downsampling on the majority class was applied before exploratory data analysis and preprocessing.")
     st.markdown("&emsp;A gradient boosting classifier was trained and optimsed using Optuna, achieving accuracy, recall, and F1 scores of around 65%. Future work may include data collection of the minority class, a new feature that records the month of the flight, and a focus on route preferences.")
