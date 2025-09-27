@@ -218,6 +218,25 @@ def main():
     # Create species layers
     species_instance.species_layer(species_instance.species_df)
     
+    # Example: Train and predict for first species
+    if species_instance.species_names:
+        first_species = species_instance.species_names[0]
+        print(f"Training model for: {first_species}")
+        
+        # Train model
+        trained_model = species_instance.train_model(first_species)
+        
+        # Get predictions
+        centroids = species_instance.inference_model(first_species, trained_model)
+        
+        # Visualize results
+        species_instance.visualise(first_species, centroids)
+        
+        print(f"Predicted {len(centroids)} locations for {first_species}")
+
+if __name__ == "__main__":
+    main()ecies_df)
+    
     # Train and infer for a sample species
     a_species = species_instance.species_names[0]  # Example: first species in the list
     trained_model = species_instance.train_model(a_species)
