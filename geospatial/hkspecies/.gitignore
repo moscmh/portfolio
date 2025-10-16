@@ -1,36 +1,16 @@
 # Python
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
+*.pyc
+*.pyo
+*.pyd
 .Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
-
-# Virtual environments
-venv/
 env/
-ENV/
+venv/
+.venv/
 
 # IDE
 .vscode/
 .idea/
-*.swp
-*.swo
 
 # OS
 .DS_Store
@@ -38,18 +18,9 @@ Thumbs.db
 
 # Logs
 *.log
-logs/
 
-# Jupyter
-.ipynb_checkpoints/
+# Don't ignore predictions cache - we want it in GitHub
+# predictions_cache/
 
-# Large data files (keep processed data)
-species/*.shp
-species/*.dbf
-species/*.shx
-species/*.prj
-species/*.cpg
-hk.tif
-
-# Keep processed data for deployment
-!processed/
+# Media
+media/

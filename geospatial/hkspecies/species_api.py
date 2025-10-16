@@ -1,23 +1,32 @@
 """
-FastAPI backend for Hong Kong Species Search
+Local Development API for Hong Kong Species
+Perfect for showcasing and development
 """
 
+import os
+import gc
+import json
+import logging
+from typing import Optional
+
+import pandas as pd
+import geopandas as gpd
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-import json
-import geopandas as gpd
-from pathlib import Path
-from typing import List, Optional
+from fastapi.responses import FileResponse
 import uvicorn
-import pandas as pd
-import sys
-import importlib.util
 
-from api_models import SpeciesSearchResponse, DistrictSpecies, MapData, DataSummary
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
-app = FastAPI(title="Hong Kong Species API", version="1.0.0")
+app = FastAPI(
+    title="Hong Kong Species API - Local", 
+    version="1.0.0",
+    description="Local development API for Hong Kong species data with full prediction capabilities"
+)
 
-# Enable CORS for frontend
+# Enable CORS for local development
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -27,88 +36,123 @@ app.add_middleware(
 )
 
 # Global data storage
-species_index = {}
-species_locations = None
-districts = None
-data_summary = {}
-species_predictor = None
+_species_index = None
+_data_summary = None
+_districts_cache = None
+_global_predictor = None
 
-@app.on_event("startup")
-async def load_data():
-    """Load processed data on startup"""
-    global species_index, species_locations, districts, data_summary, species_predictor
-    
-    data_dir = Path("processed")
-    
-    # Load species index
-    with open(data_dir / "species_index.json") as f:
-        species_index = json.load(f)
-    
-    # Load geospatial data
-    species_locations = gpd.read_parquet(data_dir / "species_locations.parquet")
-    districts = gpd.read_parquet(data_dir / "districts.parquet")
-    
-    # Load summary
-    with open(data_dir / "data_summary.json") as f:
-        data_summary = json.load(f)
-    
-    # Initialize species predictor (lazy loading for memory optimization)
-    species_predictor = None
-    print("Species predictor will be loaded on first prediction request")
+def get_species_index():
+    """Lazy load species index"""
+    global _species_index
+    if _species_index is None:
+        try:
+            with open("processed/species_index.json") as f:
+                _species_index = json.load(f)
+            logger.info(f"✅ Loaded species index with {len(_species_index)} species")
+        except Exception as e:
+            logger.error(f"❌ Failed to load species index: {e}")
+            _species_index = {}
+    return _species_index
+
+def get_data_summary():
+    """Lazy load data summary"""
+    global _data_summary
+    if _data_summary is None:
+        try:
+            with open("processed/data_summary.json") as f:
+                _data_summary = json.load(f)
+            logger.info("✅ Loaded data summary")
+        except Exception as e:
+            logger.error(f"❌ Failed to load data summary: {e}")
+            _data_summary = {}
+    return _data_summary
+
+def load_species_locations(species_name: str):
+    """Load specific species location data on demand"""
+    try:
+        df = gpd.read_parquet("processed/species_locations.parquet")
+        species_data = df[df['scientific_name'] == species_name].copy()
+        del df
+        gc.collect()
+        return species_data
+    except Exception as e:
+        logger.error(f"Failed to load species locations for {species_name}: {e}")
+        return gpd.GeoDataFrame()
+
+def get_districts():
+    """Lazy load districts data"""
+    global _districts_cache
+    if _districts_cache is None:
+        try:
+            _districts_cache = gpd.read_parquet("processed/districts.parquet")
+            logger.info("✅ Loaded districts data")
+        except Exception as e:
+            logger.error(f"❌ Failed to load districts: {e}")
+            _districts_cache = gpd.GeoDataFrame()
+    return _districts_cache
 
 @app.get("/")
-async def root():
-    return {"message": "Hong Kong Species API", "version": "1.0.0"}
+async def serve_frontend():
+    """Serve the frontend HTML page"""
+    return FileResponse("frontend.html")
 
-@app.get("/api/summary", response_model=DataSummary)
+@app.get("/health")
+async def health_check():
+    """Health check endpoint"""
+    return {"status": "healthy", "service": "hk-species-api-local", "environment": "development"}
+
+@app.get("/api/summary")
 async def get_summary():
     """Get dataset summary statistics"""
-    return data_summary
+    return get_data_summary()
 
 @app.get("/api/species/list")
-async def get_all_species():
-    """Get list of all available species for dropdown"""
+async def get_all_species(limit: int = Query(100, le=500)):
+    """Get list of all available species"""
+    species_index = get_species_index()
+    
     species_list = []
-    for name, data in species_index.items():
+    for name, data in list(species_index.items())[:limit]:
         species_list.append({
             "scientific_name": name,
-            "family": data["family"],
-            "occurrences_count": len(data["locations"])
+            "family": data.get("family", "Unknown"),
+            "occurrences_count": len(data.get("locations", []))
         })
     
-    # Sort by scientific name
     species_list.sort(key=lambda x: x["scientific_name"])
     
-    return {"species": species_list, "total": len(species_list)}
+    return {
+        "species": species_list, 
+        "total": len(species_list),
+        "total_available": len(species_index)
+    }
 
 @app.get("/api/species/search")
-async def search_species(q: str = Query(None, description="Species name to search")):
-    """Search for species by name (partial matching) or return all if no query"""
+async def search_species(
+    q: str = Query(None, description="Species name to search"),
+    limit: int = Query(50, le=100)
+):
+    """Search for species by name"""
+    species_index = get_species_index()
     matches = []
     
     if q:
         q_lower = q.lower()
+        count = 0
         for name, data in species_index.items():
+            if count >= limit:
+                break
             if q_lower in name.lower():
                 matches.append({
                     "scientific_name": name,
-                    "family": data["family"],
-                    "districts_count": len(data["districts"]),
-                    "occurrences_count": len(data["locations"]),
-                    "latest_date": data["latest_date"]
+                    "family": data.get("family", "Unknown"),
+                    "districts_count": len(data.get("districts", [])),
+                    "occurrences_count": len(data.get("locations", [])),
+                    "latest_date": data.get("latest_date", "Unknown")
                 })
-    else:
-        # Return all species if no query
-        for name, data in species_index.items():
-            matches.append({
-                "scientific_name": name,
-                "family": data["family"],
-                "districts_count": len(data["districts"]),
-                "occurrences_count": len(data["locations"]),
-                "latest_date": data["latest_date"]
-            })
+                count += 1
     
-    if not matches:
+    if not matches and q:
         raise HTTPException(status_code=404, detail="No species found matching query")
     
     return {"results": matches, "total": len(matches)}
@@ -116,52 +160,89 @@ async def search_species(q: str = Query(None, description="Species name to searc
 @app.get("/api/species/{species_name}")
 async def get_species_details(species_name: str):
     """Get detailed information for a specific species"""
+    species_index = get_species_index()
+    
     if species_name not in species_index:
         raise HTTPException(status_code=404, detail="Species not found")
     
     species_data = species_index[species_name]
     
-    return SpeciesSearchResponse(
-        species=species_data,
-        total_occurrences=len(species_data["locations"]),
-        districts_count=len(species_data["districts"])
-    )
+    return {
+        "species": species_data,
+        "total_occurrences": len(species_data.get("locations", [])),
+        "districts_count": len(species_data.get("districts", []))
+    }
 
 @app.get("/api/species/{species_name}/map")
 async def get_species_map_data(species_name: str):
     """Get GeoJSON map data for a specific species"""
+    species_index = get_species_index()
+    
     if species_name not in species_index:
         raise HTTPException(status_code=404, detail="Species not found")
     
-    # Filter species locations
-    species_data = species_locations[
-        species_locations['scientific_name'] == species_name
-    ].copy()
+    species_data = load_species_locations(species_name)
     
     if species_data.empty:
         raise HTTPException(status_code=404, detail="No location data found")
     
-    # Convert date column to string to avoid JSON serialization issues
-    if 'date' in species_data.columns:
-        species_data['date'] = species_data['date'].dt.strftime('%Y-%m-%d')
+    try:
+        if 'date' in species_data.columns:
+            species_data['date'] = species_data['date'].dt.strftime('%Y-%m-%d')
+        
+        species_data_wgs84 = species_data.to_crs('EPSG:4326')
+        geojson = json.loads(species_data_wgs84.to_json())
+        
+        del species_data, species_data_wgs84
+        gc.collect()
+        
+        return {"type": "FeatureCollection", "features": geojson["features"]}
+        
+    except Exception as e:
+        logger.error(f"Error processing map data for {species_name}: {e}")
+        raise HTTPException(status_code=500, detail="Error processing map data")
+
+@app.get("/api/species/{species_name}/predict-2025")
+async def predict_species_2025(species_name: str):
+    """Predict 2025 occurrences for a species using neural network"""
+    global _global_predictor
     
-    # Convert to WGS84 for web mapping
-    species_data_wgs84 = species_data.to_crs('EPSG:4326')
-    
-    # Convert to GeoJSON
-    geojson = json.loads(species_data_wgs84.to_json())
-    
-    return MapData(features=geojson["features"])
+    try:
+        # Initialize predictor on first use (lazy loading for local dev)
+        if _global_predictor is None:
+            logger.info("🔮 Initializing prediction model for local development...")
+            from species_inference import get_global_predictor
+            _global_predictor = get_global_predictor()
+            logger.info("✅ Prediction model ready for local development")
+        
+        from species_inference import fast_predict_with_global_predictor
+        
+        logger.info(f"🔮 Running prediction for {species_name}")
+        
+        # Use optimized prediction with caching
+        prediction_result = fast_predict_with_global_predictor(_global_predictor, species_name)
+        
+        if not prediction_result:
+            raise HTTPException(status_code=404, detail="No predictions generated - species not found or insufficient data")
+        
+        logger.info(f"✅ Prediction completed for {species_name}: {prediction_result['prediction_info']['predicted_locations']} locations")
+        return prediction_result
+        
+    except Exception as e:
+        logger.error(f"❌ Prediction failed for {species_name}: {e}")
+        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
 
 @app.get("/api/districts")
-async def get_districts():
+async def get_districts_list():
     """Get list of all districts"""
+    districts = get_districts()
+    
     district_list = []
     for _, district in districts.iterrows():
         district_list.append({
-            "name_en": district["name_en"],
-            "name_tc": district["name_tc"],
-            "area_code": district["area_code"]
+            "name_en": district.get("name_en", "Unknown"),
+            "name_tc": district.get("name_tc", "Unknown"),
+            "area_code": district.get("area_code", "Unknown")
         })
     
     return {"districts": district_list}
@@ -169,72 +250,33 @@ async def get_districts():
 @app.get("/api/districts/map")
 async def get_districts_map():
     """Get GeoJSON map data for Hong Kong districts"""
-    # Make a copy to avoid modifying original data
-    districts_copy = districts.copy()
+    districts = get_districts()
     
-    # Convert any datetime columns to strings
-    for col in districts_copy.columns:
-        if districts_copy[col].dtype == 'datetime64[ns]':
-            districts_copy[col] = districts_copy[col].dt.strftime('%Y-%m-%d')
+    if districts.empty:
+        raise HTTPException(status_code=404, detail="Districts data not available")
     
-    # Convert to WGS84 for web mapping
-    districts_wgs84 = districts_copy.to_crs('EPSG:4326')
-    
-    # Convert to GeoJSON
-    geojson = json.loads(districts_wgs84.to_json())
-    
-    return MapData(features=geojson["features"])
-
-@app.get("/api/districts/{district_name}/species")
-async def get_district_species(district_name: str):
-    """Get all species found in a specific district"""
-    district_species = []
-    
-    for name, data in species_index.items():
-        if district_name in data["districts"]:
-            district_species.append({
-                "scientific_name": name,
-                "family": data["family"],
-                "occurrences": len([loc for loc in data["locations"] 
-                                 if loc["district"] == district_name])
-            })
-    
-    if not district_species:
-        raise HTTPException(status_code=404, detail="District not found or no species data")
-    
-    return DistrictSpecies(
-        district_name=district_name,
-        species_count=len(district_species),
-        species_list=[s["scientific_name"] for s in district_species]
-    )
-
-@app.get("/api/families")
-async def get_families():
-    """Get list of all species families"""
-    return {"families": data_summary["families"]}
-
-@app.get("/api/families/{family_name}/species")
-async def get_family_species(family_name: str):
-    """Get all species in a specific family"""
-    family_species = []
-    
-    for name, data in species_index.items():
-        if data["family"].lower() == family_name.lower():
-            family_species.append({
-                "scientific_name": name,
-                "districts_count": len(data["districts"]),
-                "occurrences_count": len(data["locations"])
-            })
-    
-    if not family_species:
-        raise HTTPException(status_code=404, detail="Family not found")
-    
-    return {"family": family_name, "species": family_species, "count": len(family_species)}
+    try:
+        districts_copy = districts.copy()
+        
+        for col in districts_copy.columns:
+            if districts_copy[col].dtype == 'datetime64[ns]':
+                districts_copy[col] = districts_copy[col].dt.strftime('%Y-%m-%d')
+        
+        districts_wgs84 = districts_copy.to_crs('EPSG:4326')
+        geojson = json.loads(districts_wgs84.to_json())
+        
+        del districts_copy, districts_wgs84
+        gc.collect()
+        
+        return {"type": "FeatureCollection", "features": geojson["features"]}
+        
+    except Exception as e:
+        logger.error(f"Error processing districts map data: {e}")
+        raise HTTPException(status_code=500, detail="Error processing districts map data")
 
 @app.get("/api/map/bounds")
 async def get_map_bounds():
     """Get Hong Kong map bounds for initial map view"""
-    # Hong Kong approximate bounds in WGS84
     return {
         "bounds": {
             "north": 22.58,
@@ -249,96 +291,69 @@ async def get_map_bounds():
         "zoom": 10
     }
 
-@app.get("/api/species/{species_name}/predict-2025")
-async def predict_species_2025(species_name: str):
-    """Predict 2025 occurrence locations for a specific species"""
-    global species_predictor
-    
-    if species_name not in species_index:
-        raise HTTPException(status_code=404, detail="Species not found")
-    
-    # Lazy load species predictor
-    if species_predictor is None:
-        try:
-            spec = importlib.util.spec_from_file_location("species_inference", "species_inference.py")
-            species_inference = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(species_inference)
-            species_predictor = species_inference.Species()
-            species_predictor.prepare_data()
-            species_predictor.get_species_names()
-            species_predictor.species_layer(species_predictor.species_df)
-            print("Species predictor loaded successfully")
-        except Exception as e:
-            raise HTTPException(status_code=503, detail=f"Prediction model not available: {str(e)}")
-    
-    try:
-        # Check if species exists in predictor data
-        if species_name not in species_predictor.species_names:
-            raise HTTPException(status_code=404, detail="Species not available for prediction")
-        
-        # Train model and get predictions
-        trained_model = species_predictor.train_model(species_name)
-        predicted_centroids = species_predictor.inference_model(species_name, trained_model)
-        
-        # Convert centroids to GeoJSON format
-        features = []
-        for i, (x, y) in enumerate(predicted_centroids):
-            # Convert to WGS84 coordinates (approximate conversion)
-            lat = 22.3193 + (y - 820000) / 111000
-            lng = 114.1694 + (x - 836000) / (111000 * 0.9135)  # cos(22.3193°)
-            
-            features.append({
-                "type": "Feature",
-                "geometry": {
-                    "type": "Point",
-                    "coordinates": [lng, lat]
-                },
-                "properties": {
-                    "species_name": species_name,
-                    "prediction_id": i,
-                    "year": 2025,
-                    "confidence": "predicted",
-                    "x_coord": x,
-                    "y_coord": y
-                }
-            })
-        
-        return {
-            "type": "FeatureCollection",
-            "features": features,
-            "prediction_info": {
-                "species_name": species_name,
-                "predicted_locations": len(predicted_centroids),
-                "prediction_year": 2025,
-                "model_type": "neural_network"
-            }
-        }
-        
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Prediction failed: {str(e)}")
+@app.get("/api/families")
+async def get_families():
+    """Get list of all species families"""
+    data_summary = get_data_summary()
+    return {"families": data_summary.get("families", [])}
 
-@app.get("/api/debug/species/{species_name}")
-async def debug_species_data(species_name: str):
-    """Debug endpoint to check species data structure"""
-    if species_name not in species_index:
-        raise HTTPException(status_code=404, detail="Species not found")
+@app.get("/api/cache/info")
+async def get_cache_info():
+    """Get prediction model cache information"""
+    try:
+        from species_inference import get_cache_info
+        return get_cache_info()
+    except Exception as e:
+        return {"error": str(e), "cached_models": 0}
+
+@app.post("/api/cache/clear")
+async def clear_cache():
+    """Clear prediction model cache to free memory"""
+    try:
+        from species_inference import clear_model_cache
+        clear_model_cache()
+        return {"message": "Cache cleared successfully"}
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.get("/api/status")
+async def get_status():
+    """Get API status and memory info"""
+    import psutil
+    import os
     
-    # Get original data info
-    species_data = species_locations[
-        species_locations['scientific_name'] == species_name
-    ]
+    process = psutil.Process(os.getpid())
+    memory_info = process.memory_info()
+    
+    # Get cache info
+    try:
+        from species_inference import get_cache_info
+        cache_info = get_cache_info()
+    except:
+        cache_info = {"cached_models": 0}
     
     return {
-        "species_name": species_name,
-        "total_records": len(species_data),
-        "columns": list(species_data.columns),
-        "crs": str(species_data.crs),
-        "sample_record": species_data.iloc[0].to_dict() if len(species_data) > 0 else None,
-        "geometry_types": species_data.geometry.geom_type.unique().tolist() if len(species_data) > 0 else [],
-        "prediction_available": species_predictor is not None and species_name in (species_predictor.species_names if species_predictor else [])
+        "status": "running",
+        "environment": "local_development",
+        "memory_usage_mb": round(memory_info.rss / 1024 / 1024, 2),
+        "species_loaded": len(get_species_index()),
+        "data_summary_loaded": bool(_data_summary),
+        "districts_loaded": bool(_districts_cache),
+        "prediction_model_ready": _global_predictor is not None,
+        "cached_models": cache_info.get("cached_models", 0)
     }
 
 if __name__ == "__main__":
-    import os
     port = int(os.environ.get("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
+    host = "127.0.0.1"  # Local development only
+    
+    logger.info("🚀 Starting Hong Kong Species API - Local Development")
+    logger.info(f"📍 Server: http://{host}:{port}")
+    logger.info("🔮 Prediction model will initialize on first prediction request")
+    
+    uvicorn.run(
+        app, 
+        host=host, 
+        port=port,
+        access_log=True
+    )
